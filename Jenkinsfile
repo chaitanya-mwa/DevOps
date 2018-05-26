@@ -5,9 +5,18 @@ node {
     stage('Build&package') {
         bat 'mvn package'
     }
-    stage ('Result')
-    {
-        archive 'gameoflife-web/target/*.war'
-        junit 'gameoflife-web/target/surefire-reports/*.xml'
+    stage('Build & Package') {
+        withSonarQubeEnv('mysonar') {
+            bat 'mvn clean package sonar:sonar'
+        }
+    }
+    
+    stage("Quality Gate") {
+        timeout(time: 1, unit: 'HOURS') {
+              def qg = waitForQualityGate()
+              if (qg.status != 'OK') {
+                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
+              }
+          }
     }
 }
