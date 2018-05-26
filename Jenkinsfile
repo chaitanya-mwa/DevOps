@@ -1,6 +1,6 @@
 node {
     stage('scm') {
-    git 'https://github.com/wakaleo/game-of-life.git'
+    git 'https://github.com/khoubyari/spring-boot-rest-example.git'
     }
     
     stage('Build & Package') {
